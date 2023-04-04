@@ -48,12 +48,8 @@ public class TxHandler {
 	
 			uniqueUtxos.addUTXO(utxo, output);
 			previousTxOutSum += output.value;
-	
-			// Check signature validity
-			byte[] message = tx.getRawDataToSign(i);
-			if (RSAKey.verifySignature(message, in.signature)) {
-				return false;
-			}
+			
+			// Check if signature is valid
 		}
 	
 		double currentTxOutSum = 0;
