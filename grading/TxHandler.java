@@ -1,4 +1,3 @@
-import java.security.*;
 
 public class TxHandler {
 
@@ -25,7 +24,7 @@ public class TxHandler {
 	 * and false otherwise.
 	 */
 
-	 public boolean isValidTx(Transaction tx) {
+	public boolean isValidTx(Transaction tx) {
 		UTXOPool uniqueUtxos = new UTXOPool();
 		double previousTxOutSum = 0;
 		// IMPLEMENT THIS
@@ -48,12 +47,6 @@ public class TxHandler {
 	
 			uniqueUtxos.addUTXO(utxo, output);
 			previousTxOutSum += output.value;
-	
-			// Check signature validity
-			byte[] message = tx.getRawDataToSign(i);
-			if (RSAKey.verifySignature(message, in.signature)) {
-				return false;
-			}
 		}
 	
 		double currentTxOutSum = 0;
@@ -70,7 +63,6 @@ public class TxHandler {
 		}
 	
 		return true;
-	}
 		// (2) kijk of er wel een signature is meegegeven
 		// geverifieerd worden met de public, en de data die ondertekend is
 		// in de jar file zit een RSA class die je kan gebruiken om te verifiëren met
