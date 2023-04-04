@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TxHandler {
 
@@ -27,6 +28,7 @@ public class TxHandler {
 
 	public boolean isValidTx(Transaction tx) {
 		UTXOPool uniqueUtxos = new UTXOPool();
+		HashSet<UTXO> seenUtxos = new HashSet<UTXO>();
 		double previousTxOutSum = 0;
 
 		for (int i = 0; i < tx.numInputs(); i++) {
@@ -43,6 +45,12 @@ public class TxHandler {
 			if (uniqueUtxos.contains(utxo)) {
 				return false;
 			}
+
+			// Check for no UTXO claimed multiple times
+			if (seenUtxos.contains(utxo)) {
+					return false;
+			}
+			seenUtxos.add(utxo);
 
 			uniqueUtxos.addUTXO(utxo, output);
 			previousTxOutSum += output.value;
