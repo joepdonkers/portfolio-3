@@ -26,6 +26,7 @@ public class TxHandler {
 	 */
 
 	 public boolean isValidTx(Transaction tx) {
+		RSAKey address = new RSAKey(null, null);
 		UTXOPool uniqueUtxos = new UTXOPool();
 		double previousTxOutSum = 0;
 		// IMPLEMENT THIS
@@ -48,8 +49,12 @@ public class TxHandler {
 	
 			uniqueUtxos.addUTXO(utxo, output);
 			previousTxOutSum += output.value;
-			
-			// Check if signature is valid
+	
+			// Check signature validity
+			byte[] message = tx.getRawDataToSign(i);
+			if (address.verifySignature(message, in.signature)) {
+				return false;
+			}
 		}
 	
 		double currentTxOutSum = 0;
@@ -84,7 +89,6 @@ public class TxHandler {
 		// de output mag kleiner zijn want scrooch vind het niet erg als er een beetje
 		// geld verloren gaat
 		// en de output mag niet groter zijn want dan geef je meer geld uit dan je hebt
-	}
 
 	/*
 	 * Handles each epoch by receiving an unordered array of proposed
